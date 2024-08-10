@@ -6,11 +6,11 @@ import com.ezpay.payment.repository.UPIRepository;
 
 public class UPIService 
 {
-    static UPI customer1 = new UPI("adithya@oksbi","adithya", 5000, 8105206202L, "adithya@gmail.com");
-    static UPI customer2 = new UPI("agneesh@oksbi","agneesh", 10000, 9563214852L, "agneesh@gmail.com");
-    static UPI customer3 = new UPI("deepak@oksbi","deepak", 8000, 8105206202L, "deepak@gmail.com");
-    static UPI customer4 = new UPI("aishveen@oksbi","aishveen", 9000, 8105206202L, "aishveen@gmail.com");
-    static UPI customer5 = new UPI("hasini@oksbi","hasini", 7000, 8105206202L, "hasini@gmail.com");
+    public static UPI customer1 = new UPI("adithya@oksbi","adithya", 5000, 8105206202L, "adithya@gmail.com");
+    public static UPI customer2 = new UPI("agneesh@oksbi","agneesh", 10000, 9563214852L, "agneesh@gmail.com");
+    public static UPI customer3 = new UPI("deepak@oksbi","deepak", 8000, 8105206202L, "deepak@gmail.com");
+    public static UPI customer4 = new UPI("aishveen@oksbi","aishveen", 9000, 8105206202L, "aishveen@gmail.com");
+    public static UPI customer5 = new UPI("hasini@oksbi","hasini", 7000, 8105206202L, "hasini@gmail.com");
 
     /*ArrayList<String> custList = new ArrayList<>();
 
