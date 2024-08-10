@@ -23,5 +23,5 @@ public class PaymentController
             //call the bank transfer details class
         }
 		
-	}
+     }
 }
