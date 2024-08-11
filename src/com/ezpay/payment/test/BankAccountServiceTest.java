@@ -8,13 +8,14 @@ import java.io.PrintStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ezpay.payment.repository.BankAccountRepository;
 import com.ezpay.payment.service.BankAccountService;
 
 public class BankAccountServiceTest {
 
     // Create a new instance of UPIService before each test
     private BankAccountService bankAccountService;
-
+    private BankAccountRepository bankAccountRepositoty;
     @Before
     public void setUp() {
         bankAccountService = new BankAccountService();
@@ -28,7 +29,7 @@ public class BankAccountServiceTest {
         bankAccountService.verifyDetails(accountNumber, amount);
 
         // Verify the balance has been updated
-        assertEquals(4000, bankAccountService.customer1.getBalance());
+        assertEquals(4000, bankAccountRepositoty.customer1.getBalance());
     }
     @Test
     public void testVerifyDetails_InsufficientBalance() {
@@ -78,6 +79,6 @@ public class BankAccountServiceTest {
         bankAccountService.verifyDetails(accountNumber, amount);
 
         // Verify the balance has been updated
-        assertEquals(6500, bankAccountService.customer5.getBalance());
+        assertEquals(6500, bankAccountRepositoty.customer5.getBalance());
     }
 }

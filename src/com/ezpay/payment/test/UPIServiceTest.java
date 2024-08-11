@@ -1,5 +1,6 @@
 package com.ezpay.payment.test;
 import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.repository.UPIRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,7 @@ public class UPIServiceTest {
 
     // Create a new instance of UPIService before each test
     private UPIService upiService;
+    private UPIRepository upiRepository;
 
     @Before
     public void setUp() {
@@ -27,7 +29,7 @@ public class UPIServiceTest {
         upiService.verifyDetails(upiId, amount);
 
         // Verify the balance has been updated
-        assertEquals(4000, upiService.customer1.getBalance());
+        assertEquals(4000, upiRepository.customer1.getBalance());
     }
 
     @Test
@@ -80,6 +82,6 @@ public class UPIServiceTest {
         upiService.verifyDetails(upiId, amount);
 
         // Verify the balance has been updated
-        assertEquals(6500, upiService.customer5.getBalance());
+        assertEquals(6500, upiRepository.customer5.getBalance());
     }
 }
