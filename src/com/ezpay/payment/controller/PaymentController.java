@@ -20,7 +20,7 @@ public class PaymentController
 
         else if(modeOfPayment.equalsIgnoreCase("Bank Transfer"))
         {
-            //call the bank transfer details class
+        	BankAccountDetails.getBankAccountDetails();
         }
 		
      }
