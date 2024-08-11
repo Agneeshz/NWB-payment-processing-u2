@@ -1,6 +1,6 @@
 package com.ezpay.payment.controller;
 import java.util.Scanner;
-//import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.service.BankAccountService;
 
 public class BankAccountDetails 
 {
