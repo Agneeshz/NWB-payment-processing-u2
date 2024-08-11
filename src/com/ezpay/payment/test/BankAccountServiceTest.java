@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ezpay.payment.service.BankAccountService;
-import com.ezpay.payment.service.UPIService;
 
 public class BankAccountServiceTest {
 
