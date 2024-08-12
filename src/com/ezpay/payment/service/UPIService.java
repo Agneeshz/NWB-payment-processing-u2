@@ -13,8 +13,6 @@
 
 
 package com.ezpay.payment.service;
-
-import com.ezpay.payment.model.UPI;
 import com.ezpay.payment.repository.UPIRepository;
 
 
