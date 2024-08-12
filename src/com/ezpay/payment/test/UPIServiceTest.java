@@ -1,3 +1,15 @@
+/**
+ * Module Name: UPIServiceTest
+ *
+ * Description:This module tests the functionality of the UPIService class, ensuring that UPI transactions
+ * are processed correctly based on various conditions like sufficient balance, invalid UPI IDs, etc.
+ * 
+ * Author:
+ * Agneesh Dasgputa
+ * 
+ * Date: August 10,2024
+ * */
+
 package com.ezpay.payment.test;
 import com.ezpay.payment.service.UPIService;
 import com.ezpay.payment.repository.UPIRepository;

@@ -1,3 +1,16 @@
+/**
+ * Module Name: UPI
+ * 
+ * Description:This module represents UPI entity within the payment system to store and manage information related 
+ * to a customer's bank account. It can be used to verify account details, check balance, and update information 
+ * as required.
+ * 
+ * Author:
+ * Adithya Mode
+ * 
+ * Date: August 10,2024
+ */
+
 package com.ezpay.payment.model;
 
 public class UPI 
@@ -7,7 +20,8 @@ public class UPI
     private int balance;
     private long mobileNumber;
     private String email;
-
+    
+    //Constructor to initialize UPI transaction with the provided details.
     public UPI(String upiId, String custName, int balance, long mobileNumber, String email)
     {
         this.upiId = upiId;
@@ -16,7 +30,8 @@ public class UPI
         this.mobileNumber = mobileNumber;
         this.email = email;
     }
-
+    
+    //getters and setters for all the params
     public String getUpiId() 
     {
 		return upiId;

@@ -1,3 +1,16 @@
+/**
+ * Module Name: BankAccountServiceTest
+ *
+ * Description:This module tests the functionality of the BankAccountService class, ensuring that bank account
+ * transactions are processed correctly based on various conditions like sufficient balance, invalid account 
+ * numbers, etc.
+ * 
+ * Author:
+ * Aishveen Kaur
+ * 
+ * Date: August 10, 2024
+ * */
+
 package com.ezpay.payment.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

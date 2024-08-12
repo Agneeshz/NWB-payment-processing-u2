@@ -1,3 +1,16 @@
+/**
+ * Module Name: BankAccountRepository
+ * 
+ * Description: This module serves as the repository for storing and managing bank account information.
+ * It contains a list of predefined bank accounts and provides functionality to update account details such as
+ * balance after a transaction.
+ * 
+ * Author:
+ * Deepak Reddy
+ * 
+ * Date: August 10,2024
+ */
+
 package com.ezpay.payment.repository;
 
 import com.ezpay.payment.model.BankAccount;
