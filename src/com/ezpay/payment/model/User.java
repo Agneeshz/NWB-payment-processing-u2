@@ -1,4 +1,4 @@
-package Model;
+package com.ezpay.payment.Model;
 
 public class User {
     private String name;
