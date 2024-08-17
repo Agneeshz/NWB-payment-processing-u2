@@ -1,8 +1,8 @@
-package Controller;
+package com.ezpay.payment.Controller;
 
 import java.util.Scanner;
 
-import Service.BankService;
+import com.ezpay.payment.Service.BankService;
 
 public class BankTransferPaymentController {
 
