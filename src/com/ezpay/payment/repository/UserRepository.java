@@ -1,6 +1,6 @@
-package Repo;
+package com.ezpay.payment.Repo;
 
-import Model.User;
+import com.ezpay.payment.Model.User;
 import java.util.HashMap;
 import java.util.Map;
 
