@@ -1,6 +1,6 @@
-package Repo;
+package com.ezpay.payment.Repo;
 
-import Model.BankTransaction;
+import com.ezpay.payment.Model.BankTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
