@@ -61,7 +61,8 @@ public class BankService {
         BankTransaction bankTransaction = new BankTransaction(senderAccountNumber, ifscCode, receiverAccountNumber, amount, new Date(), note, "Success");
         banktransactionRepository.saveTransaction(bankTransaction);
 
-        return "Payment of " + amount + " from " + sender.getCustName() + " ACCOUNT NUMBER :" + senderAccountNumber + " To " + receiver.getCustName() + " ACCOUNT NUMBER : " + receiverAccountNumber + " is done." + System.lineSeparator() + "Transaction Successful !!";
+        System.out.println("Payment of " + amount + " from " + sender.getCustName() + " ACCOUNT NUMBER :" + senderAccountNumber + " To " + receiver.getCustName() + " ACCOUNT NUMBER : " + receiverAccountNumber + " is done.");
+        return "Transaction Successful.";
     }
 
 }
