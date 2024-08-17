@@ -26,21 +26,21 @@ public class BankServiceTest {
         @Test 
         public void testValidTransaction(){
         String result = bankService.processPayment("99887744556", "SBIN096321", "88997755664", 1000, "Payment for dinner");
-        System.out.println(result);
+        assertEquals("Transaction Successful.", result);
         }
 
-        // Test invalid UPI ID
+        // Test invalid account number
         @Test 
-        public void testInvalidUpiId(){
+        public void testInvalidAccountNumber(){
         result = bankService.processPayment("99662211523", "SBIN096321", "99887744556", 1000, "");
-        System.out.println(result);
+        assertEquals("Invalid Account Number", result);
         }
 
         // Test insufficient funds
         @Test 
         public void testInsufficientFunds(){
         result = bankService.processPayment("88662211335", "SBIN098512", "88997755661", 100000, "Payment for car");
-        System.out.println(result);
+        assertEquals("Error: Insufficient funds.", result);
         }
     
 }
