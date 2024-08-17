@@ -1,9 +1,9 @@
-package Test;
+package com.ezpay.payment.Test;
 
-import Model.BankTransaction;
-import Repo.BankTransactionRepository;
-import Repo.BankUserRepository;
-import Service.BankService;
+import com.ezpay.payment.Model.BankTransaction;
+import com.ezpay.payment.Repo.BankTransactionRepository;
+import com.ezpay.payment.Repo.BankUserRepository;
+import com.ezpay.payment.Service.BankService;
 
 
 import static org.junit.Assert.assertEquals;
