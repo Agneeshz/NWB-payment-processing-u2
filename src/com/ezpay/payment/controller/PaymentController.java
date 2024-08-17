@@ -1,4 +1,4 @@
-package Controller;
+package com.ezpay.payment.Controller;
 
 import java.util.Scanner;
 
