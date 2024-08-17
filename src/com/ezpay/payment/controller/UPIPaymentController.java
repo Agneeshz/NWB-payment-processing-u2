@@ -1,8 +1,8 @@
-package Controller;
+package com.ezpay.payment.Controller;
 
 import java.util.Scanner;
 
-import Service.UPIService;
+import com.ezpay.payment.Service.UPIService;
 
 public class UPIPaymentController {
 
