@@ -1,64 +1,52 @@
-/**
- * Module Name: UPIService
- * 
- * Description: This module provides services related to UPI transactions. It verifies UPI details and ensures 
- * that a transaction can be completed based on the user's balance. If the balance is sufficient, the transaction 
- * is processed and the UPI balance is updated.
- * 
- * Author:
- * Adithya Mode
- * 
- * Date: August 10,2024
- */
+package Service;
 
+import Model.Transaction;
+import Model.User;
+import Repo.TransactionRepository;
+import Repo.UserRepository;
 
-package com.ezpay.payment.service;
-import com.ezpay.payment.repository.UPIRepository;
+import java.util.Date;
 
+public class UPIService {
+    private UserRepository userRepository;
+    private TransactionRepository transactionRepository;
 
-public class UPIService 
-{
-    //Verifies details and processes the transaction if the balance is sufficient.
-    static public void verifyDetails(String upiId, int amount) 
-    {   
-        String custUpiId = "null";
-        int j=0;
-        
-        // Search for the UPI ID in the repository
-        for(int i=0; i<5; i++)
-        {
-            if(upiId.equalsIgnoreCase(UPIRepository.custUPIID[i]))
-            {
-                custUpiId = upiId;
-                j=i;
-            }
-        }
-        
-        // Check if the UPI ID was found
-        if(custUpiId != "null")
-        {            
-            int balance = UPIRepository.customer[j].getBalance();
-            
-            // Check if the account has sufficient balance
-            if(amount > balance)
-            {
-                System.out.println("Insufficient balance");
-            }
-
-            else
-            {
-                System.out.println("Transaction Successful");
-                int remainingAmount = balance-amount;
-                
-                // Update the customer's account balance
-                UPIRepository.updateDetails(upiId, remainingAmount, UPIRepository.customer[j]);
-            }
-        }
-
-        else
-        {
-            System.out.println("Invalid UPI ID");
-        }
+    public UPIService(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
     }
-    
+
+    // upi id verification
+    public String verifyUpiId(String UpiId)
+    {
+        User sender = userRepository.findUserByUpiId(UpiId);
+
+        if(sender == null)
+        {
+            return "Invalid UPI ID";
+        }
+
+        return "verified";
+    }
+
+    public String processPayment(String senderUpiId, String receiverUpiId, double amount, String note) {
+        User sender = userRepository.findUserByUpiId(senderUpiId);
+        User receiver = userRepository.findUserByUpiId(receiverUpiId);
+
+        // Check if the account has sufficient balance
+        if (sender.getBalance() < amount) {
+            return "Error: Insufficient funds.";
+        }
+
+        // Deduct amount from sender and add to receiver
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
+
+        // Record the transaction
+        Transaction transaction = new Transaction(senderUpiId, receiverUpiId, amount, new Date(), note, "Success");
+        transactionRepository.saveTransaction(transaction);
+
+        System.out.println("Payment of " + amount + " from " + senderUpiId + " to " + receiverUpiId + " is done.");
+        return "Transaction Successful.";
+    }
 }
