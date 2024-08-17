@@ -1,9 +1,9 @@
-package Service;
+package com.ezpay.payment.Service;
 
-import Model.BankTransaction;
-import Model.BankUser;
-import Repo.BankTransactionRepository;
-import Repo.BankUserRepository;
+import com.ezpay.payment.Model.BankTransaction;
+import com.ezpay.payment.Model.BankUser;
+import com.ezpay.payment.Repo.BankTransactionRepository;
+import com.ezpay.payment.Repo.BankUserRepository;
 
 
 import java.util.Date;
