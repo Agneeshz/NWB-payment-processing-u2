@@ -1,9 +1,9 @@
-package Test;
+package com.ezpay.payment.Test;
 
-import Model.Transaction;
-import Repo.TransactionRepository;
-import Repo.UserRepository;
-import Service.UPIService;
+import com.ezpay.payment.Model.Transaction;
+import com.ezpay.payment.Repo.TransactionRepository;
+import com.ezpay.payment.Repo.UserRepository;
+import com.ezpay.payment.Service.UPIService;
 
 import org.junit.Before;
 import org.junit.Test;
