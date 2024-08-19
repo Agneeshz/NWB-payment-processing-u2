@@ -14,22 +14,48 @@
 package com.ezpay.payment.repository;
 
 import com.ezpay.payment.model.UPI;
-import java.util.HashMap;
-import java.util.Map;
+import com.ezpay.payment.util.DBConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UPIRepository {
-    private Map<String, UPI> users = new HashMap<>();
+	private Connection connection;
+    public UPIRepository(Connection connection) {
+        this.connection = connection;
+    }
+    public UPI findUserByUpiId(String upiId) {
+        try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
+            String query = "SELECT * FROM upi WHERE upi_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, upiId);
+            ResultSet rs = stmt.executeQuery();
 
-    public UPIRepository() {
-        // Initializing with some sample users
-        users.put("adithya@oksbi", new UPI("Adithya Mode", "adithya@oksbi", 5000, 8105206202L, "adithya@gmail.com"));
-        users.put("agneesh@oksbi", new UPI("Agneesh Dasgupta", "agneesh@oksbi", 8000, 9563214852L, "agneesh@gmail.com"));
-        users.put("deepak@oksbi", new UPI("Deepak Reddy", "deepak@oksbi", 10000, 8105206202L, "deepak@gmail.com"));
-        users.put("aishveen@oksbi", new UPI("Aishveen Kaur", "aishveen@oksbi", 12000, 8105206202L, "aishveen@gmail.com"));
-        users.put("hasini@oksbi", new UPI("Hasini", "hasini@oksbi", 15000, 8105206202L, "hasini@gmail.com"));
+            if (rs.next()) {
+                String custName = rs.getString("cust_name");
+                double balance = rs.getDouble("balance");
+                long mobileNumber = rs.getLong("mobile_number");
+                String email = rs.getString("email");
+                return new UPI(custName, upiId, balance, mobileNumber, email);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public UPI findUserByUpiId(String upiId) {
-        return users.get(upiId);
+    public void updateUser(UPI upi) {
+        try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
+            String query = "UPDATE upi SET balance = ? WHERE upi_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setDouble(1, upi.getBalance());
+            stmt.setString(2, upi.getUpiId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
+

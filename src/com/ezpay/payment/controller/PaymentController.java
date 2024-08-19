@@ -17,7 +17,6 @@ import java.util.Scanner;
 public class PaymentController {
 
     public static void main(String[] args) {
-
         //Assuming user has already logged in
         Scanner scanner = new Scanner(System.in);
 

@@ -1,18 +1,8 @@
-/**
- * Module Name: UPIDetails
- *
- * Description:This module is responsible for collecting UPI transaction details from the user.It confirms the 
- * details, and then initiates the transaction if confirmed by the user.
- * 
- * Author:
- * Adithya Mode
- * 
- * Date: August 10,2024
- */
-
-
 package com.ezpay.payment.controller;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.ezpay.payment.repository.UPIRepository;
@@ -21,11 +11,25 @@ import com.ezpay.payment.service.UPIService;
 
 public class UPIPaymentController {
 
-    public void UPIDetails()
-    {
-        // Setup repositories
-        UPIRepository userRepository = new UPIRepository();
-        UPITransactionRepository transactionRepository = new UPITransactionRepository();
+    private Connection connection;
+
+    public UPIPaymentController() {
+        try {
+            // Setup JDBC connection
+            String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe"; // Update this URL based on your DB
+            String jdbcUser = "system"; // Update with your DB user
+            String jdbcPassword = "natwest123"; // Update with your DB password
+            connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database");
+        }
+    }
+
+    public void UPIDetails() {
+        // Setup repositories with database connection
+        UPIRepository userRepository = new UPIRepository(connection);
+        UPITransactionRepository transactionRepository = new UPITransactionRepository(connection);
         
         // Setup UPI service
         UPIService upiService = new UPIService(userRepository, transactionRepository);
@@ -35,19 +39,17 @@ public class UPIPaymentController {
         System.out.println("Enter your UPI ID:");
         String senderUpiId = scanner.nextLine();
 
-        //verifying sender upiid
-        String senderUpiverification = upiService.verifyUpiId(senderUpiId);
+        // Verifying sender UPI ID
+        String senderUpiVerification = upiService.verifyUpiId(senderUpiId);
 
-        if(senderUpiverification.equalsIgnoreCase("verified"))
-        {
+        if (senderUpiVerification.equalsIgnoreCase("verified")) {
             System.out.println("Enter recipient UPI ID:");
             String receiverUpiId = scanner.nextLine();
 
-            //verifying receiver upi id
-            String receiverUpiverification = upiService.verifyUpiId(receiverUpiId);
+            // Verifying receiver UPI ID
+            String receiverUpiVerification = upiService.verifyUpiId(receiverUpiId);
 
-            if(receiverUpiverification.equalsIgnoreCase("verified"))
-            {
+            if (receiverUpiVerification.equalsIgnoreCase("verified")) {
                 System.out.println("Enter amount to send:");
                 double amount = scanner.nextDouble();
                 scanner.nextLine(); // consume newline
@@ -69,23 +71,24 @@ public class UPIPaymentController {
                 } else {
                     System.out.println("Transaction Aborted.");
                 }
-            }
-
-            else
-            {
-                System.out.println(receiverUpiverification);
+            } else {
+                System.out.println(receiverUpiVerification);
                 System.out.println("Transaction cancelled !!");
             }
-        }
-
-        else
-        {
-            System.out.println(senderUpiverification);
+        } else {
+            System.out.println(senderUpiVerification);
             System.out.println("Transaction cancelled !!");
         }
 
         scanner.close();
+        
+        // Close JDBC connection
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-
 }
-
