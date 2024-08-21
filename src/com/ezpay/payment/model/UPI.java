@@ -17,12 +17,12 @@ public class UPI
 {
     private String upiId;
     private String custName;
-    private int balance;
+    private double balance;
     private long mobileNumber;
     private String email;
     
     //Constructor to initialize UPI transaction with the provided details.
-    public UPI(String upiId, String custName, int balance, long mobileNumber, String email)
+    public UPI(String custName, String upiId, double balance, long mobileNumber, String email)
     {
         this.upiId = upiId;
         this.custName = custName;
@@ -52,12 +52,12 @@ public class UPI
         this.custName = custName;
     }
     
-    public int getBalance()
+    public double getBalance()
     {
         return balance;
     }
 
-    public void setBalance(int balance)
+    public void setBalance(double balance)
     {
         this.balance = balance;
     }

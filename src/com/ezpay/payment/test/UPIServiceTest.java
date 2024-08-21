@@ -11,89 +11,45 @@
  * */
 
 package com.ezpay.payment.test;
-import com.ezpay.payment.service.UPIService;
+
+import com.ezpay.payment.repository.UPITransactionRepository;
 import com.ezpay.payment.repository.UPIRepository;
+import com.ezpay.payment.service.UPIService;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 public class UPIServiceTest {
 
-    // Create a new instance of UPIService before each test
-    private UPIService upiService;
-    private UPIRepository upiRepository;
+        private UPIService upiservice;
 
-    @Before
-    public void setUp() {
-        upiService = new UPIService();
-    }
-
-    @Test
-    public void testVerifyDetails_SuccessfulTransaction() {
-        String upiId = "adithya@oksbi";
-        int amount = 1000;
+        @Before
+        public void setUp() {
+        	UPIRepository userRepository = new UPIRepository();
+            UPITransactionRepository transactionRepository = new UPITransactionRepository();
+            UPIService upiService = new UPIService(userRepository, transactionRepository);
+        }
         
-        // Perform the transaction
-        upiService.verifyDetails(upiId, amount);
+        // Test valid transaction
+        @Test
+        public void testValidTransaction(){
+        String result = UPIService.processPayment("adithya@oksbi", "agneesh@oksbi", 1000, "Payment for dinner");
+        assertEquals("Transaction Successful.", result);
+        }
 
-        // Verify the balance has been updated
-        assertEquals(4000, upiRepository.customer1.getBalance());
-    }
+        // Test invalid UPI ID
+        @Test
+        public void testInvalidUpiId(){
+        String result = UPIService.processPayment("invalid@upi", "deepak@oksbi", 1000, "");
+        assertEquals("Invalid UPI ID", result);
+        }
 
-    @Test
-    public void testVerifyDetails_InsufficientBalance() {
-        String upiId = "adithya@oksbi";
-        int amount = 6000;
-        
-        // Capture output to verify the correct message is printed
-        // Use ByteArrayOutputStream to capture System.out
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outputStream));
-
-        // Perform the transaction
-        upiService.verifyDetails(upiId, amount);
-
-        // Restore System.out
-        System.setOut(originalOut);
-
-        String output = outputStream.toString().trim();
-        assertTrue(output.contains("Insufficient balance"));
-    }
-
-    @Test
-    public void testVerifyDetails_InvalidUPIId() {
-        String upiId = "invalid@upi";
-        int amount = 1000;
-        
-        // Capture output to verify the correct message is printed
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outputStream));
-
-        // Perform the transaction
-        upiService.verifyDetails(upiId, amount);
-
-        // Restore System.out
-        System.setOut(originalOut);
-
-        String output = outputStream.toString().trim();
-        assertTrue(output.contains("Invalid UPI ID"));
-    }
-
-    @Test
-    public void testVerifyDetails_ValidTransaction() {
-        String upiId = "hasini@oksbi";
-        int amount = 500;
-        
-        // Perform the transaction
-        upiService.verifyDetails(upiId, amount);
-
-        // Verify the balance has been updated
-        assertEquals(6500, upiRepository.customer5.getBalance());
-    }
+        // Test insufficient funds
+        @Test 
+        public void testInsufficientFunds(){
+        String result = UPIService.processPayment("aishveen@oksbi", "hasini@oksbi", 100000, "Payment for car");
+        assertEquals("Error: Insufficient funds.", result);
+        }
+    
 }

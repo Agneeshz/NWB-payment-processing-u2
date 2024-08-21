@@ -14,35 +14,48 @@
 package com.ezpay.payment.repository;
 
 import com.ezpay.payment.model.UPI;
-//import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.util.DBConnection;
 
-public class UPIRepository 
-{
-    public static UPI customer1 = new UPI("adithya@oksbi","adithya", 5000, 8105206202L, "adithya@gmail.com");
-    public static UPI customer2 = new UPI("agneesh@oksbi","agneesh", 10000, 9563214852L, "agneesh@gmail.com");
-    public static UPI customer3 = new UPI("deepak@oksbi","deepak", 8000, 8105206202L, "deepak@gmail.com");
-    public static UPI customer4 = new UPI("aishveen@oksbi","aishveen", 9000, 8105206202L, "aishveen@gmail.com");
-    public static UPI customer5 = new UPI("hasini@oksbi","hasini", 7000, 8105206202L, "hasini@gmail.com");
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-    /*ArrayList<String> custList = new ArrayList<>();
+public class UPIRepository {
+	private Connection connection;
+    public UPIRepository(Connection connection) {
+        this.connection = connection;
+    }
+    public UPI findUserByUpiId(String upiId) {
+        try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
+            String query = "SELECT * FROM upi WHERE upi_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, upiId);
+            ResultSet rs = stmt.executeQuery();
 
-    custList.add(customer1.getUpiId());
-    custList.add(customer2.getUpiId());
-    custList.add(customer3.getUpiId());
-    custList.add(customer4.getUpiId());
-    custList.add(customer5.getUpiId());*/
-
-    public static String[] custUPIID = {"adithya@oksbi", "agneesh@oksbi", "deepak@oksbi", "aishveen@oksbi", "hasini@oksbi"};
-    public static UPI[] customer = {customer1, customer2, customer3, customer4, customer5};
-
-    static public void updateDetails(String upiId, int amount, UPI customer)
-    {
-        //from list get person details using upiId for searching 
-        //update the array by substracting the amount
-        customer.setBalance(amount);
-        
-        //create a list for each user using his upiid
-        //in this list record the transaction
+            if (rs.next()) {
+                String custName = rs.getString("cust_name");
+                double balance = rs.getDouble("balance");
+                long mobileNumber = rs.getLong("mobile_number");
+                String email = rs.getString("email");
+                return new UPI(custName, upiId, balance, mobileNumber, email);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    public void updateUser(UPI upi) {
+        try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
+            String query = "UPDATE upi SET balance = ? WHERE upi_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setDouble(1, upi.getBalance());
+            stmt.setString(2, upi.getUpiId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
