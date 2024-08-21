@@ -20,20 +20,29 @@ public class PaymentController {
         //Assuming user has already logged in
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please enter the mode of payment");
-        System.out.println("UPI or Bank Transfer ?");
-        String modeOfPayment = scanner.nextLine();
+        System.out.println("Please enter the mode of payment:");
+        System.out.println("1. UPI");
+        System.out.println("2. Bank Transfer");
+        System.out.println("3. Exit");
 
-        if(modeOfPayment.equalsIgnoreCase("UPI"))
-        {
-            UPIPaymentController upiPaymentController = new UPIPaymentController();
-            upiPaymentController.UPIDetails();
-        }
+        int choice = scanner.nextInt(); // Read the user choice as an integer
+        scanner.nextLine(); // Consume the newline character left after nextInt()
 
-        else if(modeOfPayment.equalsIgnoreCase("Bank Transfer"))
-        {
-        	BankTransferPaymentController bankPaymentController = new BankTransferPaymentController();
-            bankPaymentController.bankDetails();
+        switch (choice) {
+            case 1:
+                UPIPaymentController upiPaymentController = new UPIPaymentController();
+                upiPaymentController.UPIDetails();
+                break;
+            case 2:
+                BankTransferPaymentController bankPaymentController = new BankTransferPaymentController();
+                bankPaymentController.bankDetails();
+                break;
+            case 3:
+                System.out.println("Exiting...");
+                break;
+            default:
+                System.out.println("Invalid input. Please enter a valid option.");
+                break;
         }
 
         scanner.close();

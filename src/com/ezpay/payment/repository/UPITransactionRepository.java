@@ -15,7 +15,7 @@ public class UPITransactionRepository {
 	}
     public void saveTransaction(UPITransaction transaction) {
         try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
-            String query = "INSERT INTO upi_transactions (sender_upi_id, receiver_upi_id, amount, date, note, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO upi_transactions (sender_upi_id, receiver_upi_id, amount, transaction_date, note, status) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, transaction.getSenderUpiId());
             stmt.setString(2, transaction.getReceiverUpiId());

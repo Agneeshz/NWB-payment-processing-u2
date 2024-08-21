@@ -32,7 +32,6 @@ public class UPIRepository {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, upiId);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 String custName = rs.getString("cust_name");
                 double balance = rs.getDouble("balance");
