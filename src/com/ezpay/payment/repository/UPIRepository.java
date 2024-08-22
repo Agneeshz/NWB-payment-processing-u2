@@ -20,22 +20,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.ezpay.payment.util.DBConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class UPIRepository {
 	private Connection connection;
+	
     public UPIRepository(Connection connection) {
         this.connection = connection;
     }
     public UPI findUserByUpiId(String upiId) {
-        try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
-            String query = "SELECT * FROM upi WHERE upi_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
+    	String query = "SELECT * FROM upi WHERE upi_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {            
             stmt.setString(1, upiId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

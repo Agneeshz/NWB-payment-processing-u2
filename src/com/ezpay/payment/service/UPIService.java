@@ -18,13 +18,10 @@ import com.ezpay.payment.model.UPITransaction;
 import com.ezpay.payment.model.UPI;
 import com.ezpay.payment.repository.UPITransactionRepository;
 
-import com.ezpay.payment.model.UPITransaction;
-import com.ezpay.payment.model.UPI;
-import com.ezpay.payment.repository.UPITransactionRepository;
 import com.ezpay.payment.repository.UPIRepository;
 
 import java.util.Date;
-import java.util.Date;
+import java.util.List;
 
 public class UPIService {
     private UPIRepository upiRepository;
@@ -79,5 +76,14 @@ public class UPIService {
         upiTransactionRepository.saveTransaction(transaction);
 
         return "Transaction Successful.";
+    }
+ // Get user balance
+    public double getBalance(String upiId) {
+        UPI user = upiRepository.findUserByUpiId(upiId);
+        return user != null ? user.getBalance() : 0.0;
+    }
+ // Get transaction history for the user
+    public List<UPITransaction> getTransactionHistory(String upiId) {
+        return upiTransactionRepository.findTransactionsByUpiId(upiId);
     }
 }

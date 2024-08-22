@@ -3,8 +3,10 @@ package com.ezpay.payment.controller;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
+import com.ezpay.payment.model.UPITransaction;
 import com.ezpay.payment.repository.UPIRepository;
 import com.ezpay.payment.repository.UPITransactionRepository;
 import com.ezpay.payment.service.UPIService;
@@ -25,9 +27,9 @@ public class UPIPaymentController {
             throw new RuntimeException("Failed to connect to the database");
         }
     }
-
+    
     public void UPIDetails() {
-        // Setup repositories with database connection
+    	// Setup repositories with database connection
         UPIRepository userRepository = new UPIRepository(connection);
         UPITransactionRepository transactionRepository = new UPITransactionRepository(connection);
         
@@ -36,6 +38,62 @@ public class UPIPaymentController {
         
         // User inputs
         Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Select an option:");
+            System.out.println("1. Check Balance");
+            System.out.println("2. Transfer Funds");
+            System.out.println("3. Check Transactions");
+            System.out.println("4. Exit");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    checkBalance(scanner, upiService);
+                    break;
+                case 2:
+                    transferFunds(scanner, upiService);
+                    break;
+                case 3:
+                    checkTransactions(scanner, upiService);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    closeConnection();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+            
+            System.out.println("Do you wish to continue? (YES to continue, any other key to exit)");
+            String continueOption = scanner.nextLine();
+            if (!continueOption.equalsIgnoreCase("YES")) {
+                System.out.println("Exiting...");
+                scanner.close();
+                closeConnection();
+                return;
+            }
+        }
+    }
+    
+    private void checkBalance(Scanner scanner, UPIService upiService) {
+        System.out.println("Enter your UPI ID:");
+        String upiId = scanner.nextLine();
+
+        // Verify account number
+        String verification = upiService.verifyUpiId(upiId);
+        if (!verification.equals("verified")) {
+            System.out.println("Invalid UPI ID."); // Updated message
+            return; // Exit the method if account number is invalid
+        }
+
+        double balance = upiService.getBalance(upiId);
+        System.out.println("Your current balance is: " + balance);
+    }
+
+    public void transferFunds(Scanner scanner, UPIService upiService) {
         System.out.println("Enter your UPI ID:");
         String senderUpiId = scanner.nextLine();
 
@@ -88,10 +146,34 @@ public class UPIPaymentController {
             System.out.println(senderUpiVerification);
             System.out.println("Transaction cancelled !!");
         }
-
-        scanner.close();
+    }
+    private void checkTransactions(Scanner scanner, UPIService upiService) {
+        System.out.println("Enter your UPI ID:");
+        String upiId = scanner.nextLine();
         
-        // Close JDBC connection
+        // Verify account number
+        String verification = upiService.verifyUpiId(upiId);
+        if (!verification.equals("verified")) {
+            System.out.println("Invalid UPI ID."); // Updated message
+            return; // Exit the method if account number is invalid
+        }
+        
+        List<UPITransaction> transactions = upiService.getTransactionHistory(upiId);
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found for UPI ID: " + upiId);
+        } else {
+            System.out.println("Transaction History for UPI ID: " + upiId);
+            for (UPITransaction transaction : transactions) {
+                System.out.println("Sender: " + transaction.getSenderUpiId() +
+                                   ", Receiver: " + transaction.getReceiverUpiId() +
+                                   ", Amount: " + transaction.getAmount() +
+                                   ", Date: " + transaction.getDate() +
+                                   ", Note: " + transaction.getNote() +
+                                   ", Status: " + transaction.getStatus());
+            }
+        }
+    }
+    private void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
