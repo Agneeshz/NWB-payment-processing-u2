@@ -38,7 +38,8 @@ public class BankServiceTest {
     public void setUp() throws SQLException {
         // Setup Oracle Database connection using DBConnection
         connection = DBConnection.getConnection();
-        createTables(connection);
+        
+        connection.setAutoCommit(false);
 
         bankUserRepository = new BankUserRepository(connection);
         bankTransactionRepository = new BankTransactionRepository(connection);
@@ -50,17 +51,13 @@ public class BankServiceTest {
 
     @After
     public void tearDown() throws SQLException {
-        // Clean up the database after each test
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("DROP TABLE bank_transactions");
-            stmt.execute("DROP TABLE bank_user");
-        }
-
-        // Close the connection
+        // Roll back the transaction to keep the database state unchanged
         if (connection != null && !connection.isClosed()) {
+            connection.rollback();
             connection.close();
         }
     }
+
 
     @Test
     public void testVerifyAccountNumber_Valid() {
@@ -120,24 +117,6 @@ public class BankServiceTest {
     }
 
     // Helper methods to set up the Oracle database and test data
-    private void createTables(Connection connection) throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("CREATE TABLE bank_user (" +
-                    "CUST_NAME VARCHAR2(255) NOT NULL, " +
-                    "ACCOUNT_NUMBER VARCHAR2(20) NOT NULL, " +
-                    "IFSC_CODE VARCHAR2(11) NOT NULL, " +
-                    "BALANCE NUMBER(15,2) NOT NULL)");
-
-            stmt.execute("CREATE TABLE bank_transactions (" +
-                    "SENDER_ACCOUNT_NUMBER VARCHAR2(20), " +
-                    "IFSC_CODE VARCHAR2(11), " +
-                    "RECEIVER_ACCOUNT_NUMBER VARCHAR2(20), " +
-                    "AMOUNT NUMBER(10,2), " +
-                    "TRANSACTION_DATE DATE, " +
-                    "NOTE VARCHAR2(255), " +
-                    "STATUS VARCHAR2(20))");
-        }
-    }
 
     private void insertTestData(Connection connection) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
