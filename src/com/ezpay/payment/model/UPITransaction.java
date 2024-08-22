@@ -4,7 +4,14 @@ import java.util.Date;
 
 public class UPITransaction {
     private String senderUpiId;
-    public String getSenderUpiId() {
+    private String receiverUpiId;
+    private double amount;
+    private Date date;
+    private String note;
+    private String status;
+
+	
+    	public String getSenderUpiId() {
 		return senderUpiId;
 	}
 
@@ -51,12 +58,6 @@ public class UPITransaction {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	private String receiverUpiId;
-    private double amount;
-    private Date date;
-    private String note;
-    private String status;
 
     public UPITransaction(String senderUpiId, String receiverUpiId, double amount, Date date, String note, String status) {
         this.senderUpiId = senderUpiId;
