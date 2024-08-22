@@ -45,9 +45,20 @@ public class UPIService {
         if (receiverVerification.equals("Invalid UPI ID")) {
             return receiverVerification;
         }
+        
+        if(senderUpiId.equals(receiverUpiId)) {
+        	return "Error: Cannot transfer money to the same UPI ID.";
+        }
 
         UPI sender = upiRepository.findUserByUpiId(senderUpiId);
         UPI receiver = upiRepository.findUserByUpiId(receiverUpiId);
+
+        if(amount<0) {
+        	return "Error: Transaction amount cannot be negative.";
+        }
+        if(amount == 0) {
+        	return "Error: Transaction amount must be greater than zero.";
+        }
 
         if (sender.getBalance() < amount) {
             return "Error: Insufficient funds.";

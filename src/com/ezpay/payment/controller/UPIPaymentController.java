@@ -45,7 +45,7 @@ public class UPIPaymentController {
         if (senderUpiVerification.equalsIgnoreCase("verified")) {
             System.out.println("Enter recipient UPI ID:");
             String receiverUpiId = scanner.nextLine();
-
+            if(!senderUpiId.equals(receiverUpiId)) {
             // Verifying receiver UPI ID
             String receiverUpiVerification = upiService.verifyUpiId(receiverUpiId);
 
@@ -53,28 +53,37 @@ public class UPIPaymentController {
                 System.out.println("Enter amount to send:");
                 double amount = scanner.nextDouble();
                 scanner.nextLine(); // consume newline
+                if(amount < 0)
+                	System.out.println("Error: Transaction amount cannot be negative.");
+                if(amount > 0)
+                {
+                	System.out.println("Enter note for the transaction (optional):");
+                	String note = scanner.nextLine();
         
-                System.out.println("Enter note for the transaction (optional):");
-                String note = scanner.nextLine();
-        
-                // Confirm transaction details
-                System.out.println("Please confirm your details");
-                System.out.println("Sender UPI ID : " + senderUpiId);
-                System.out.println("Receiver UPI ID : " + receiverUpiId);
-                System.out.println("Amount : " + amount);
-                System.out.println("Enter YES to initiate the transaction");
-                String confirm = scanner.nextLine();
-        
-                if (confirm.equalsIgnoreCase("yes")) {
-                    String result = upiService.processPayment(senderUpiId, receiverUpiId, amount, note);
-                    System.out.println(result);
+                	// Confirm transaction details
+                	System.out.println("Please confirm your details");
+                	System.out.println("Sender UPI ID : " + senderUpiId);
+                	System.out.println("Receiver UPI ID : " + receiverUpiId);
+                	System.out.println("Amount : " + amount);
+                	System.out.println("Enter YES to initiate the transaction");
+                	String confirm = scanner.nextLine();
+                	
+                	if (confirm.equalsIgnoreCase("yes")) {
+                		String result = upiService.processPayment(senderUpiId, receiverUpiId, amount, note);
+                		System.out.println(result);
+                	} else {
+                		System.out.println("Transaction Aborted.");
+                	}
                 } else {
-                    System.out.println("Transaction Aborted.");
+            		System.out.println("Error: Transaction amount must be greater than zero.");
+            	}
+            } else {
+                	System.out.println(receiverUpiVerification);
+                	System.out.println("Transaction cancelled !!");
                 }
             } else {
-                System.out.println(receiverUpiVerification);
-                System.out.println("Transaction cancelled !!");
-            }
+        		System.out.println("Error: Cannot transfer money to the same UPI ID.");
+        	}
         } else {
             System.out.println(senderUpiVerification);
             System.out.println("Transaction cancelled !!");
