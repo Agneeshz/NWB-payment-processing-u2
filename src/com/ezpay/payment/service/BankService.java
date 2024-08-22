@@ -1,14 +1,14 @@
 /**
- * Module Name: BankAccountService
- * 
- * Description: This module provides services related to bank account transactions. It verifies account details 
- * and ensures that a transaction can be completed based on the account balance. If the balance is sufficient, 
- * the transaction is processed and the account balance is updated.
+ * Module Name: BankService
+ *
+ * Description: The BankService class providesmethods for verifying account numbers and IFSC codes, processing payments, 
+ * retrieving user balances, and fetching transaction histories. .
  * 
  * Author:
- * Deepak Reddy
+ * Hasini Sai Ramya
  * 
- * Date: August 10,2024
+ * Date: August 20, 2024
+ * 
  */
 
 
@@ -19,77 +19,74 @@ import com.ezpay.payment.model.BankUser;
 import com.ezpay.payment.repository.BankTransactionRepository;
 import com.ezpay.payment.repository.BankUserRepository;
 
-
 import java.util.Date;
+import java.util.List;
 
 public class BankService {
+    private BankUserRepository bankUserRepository;
+    private BankTransactionRepository bankTransactionRepository;
 
-    private static BankUserRepository bankuserRepository;
-    private static BankTransactionRepository banktransactionRepository;
-
-    public BankService(BankUserRepository bankuserRepository, BankTransactionRepository banktransactionRepository) {
-        this.bankuserRepository = bankuserRepository;
-        this.banktransactionRepository = banktransactionRepository;
+    public BankService(BankUserRepository bankUserRepository, BankTransactionRepository bankTransactionRepository) {
+        this.bankUserRepository = bankUserRepository;
+        this.bankTransactionRepository = bankTransactionRepository;
     }
 
-    //account number verification
-    public static String verifyAccountNumber(String accountNumber)
-    {
-        BankUser sender = bankuserRepository.findUserByAccountNumber(accountNumber);
-
-        if(sender == null)
-        {
-            return "Invalid Account Number";
-        }
-
-        return "verified";
+    // Verify account number
+    public String verifyAccountNumber(String accountNumber) {
+        BankUser user = bankUserRepository.findUserByAccountNumber(accountNumber);
+        return user == null ? "Invalid Account Number" : "verified";
     }
 
-    //ifsc code verification
-    public static String verifyIfscCode(String accountNumber, String ifscCode)
-    {
-        BankUser sender = bankuserRepository.findUserByAccountNumber(accountNumber);
-
-        if (sender == null || !sender.getIfscCode().equalsIgnoreCase(ifscCode)) {
-            return "Invalid IFSC Code";
-        }
-
-        return "verified";
+    // Verify IFSC code
+    public String verifyIfscCode(String accountNumber, String ifscCode) {
+        BankUser user = bankUserRepository.findUserByAccountNumber(accountNumber);
+        return (user == null || !user.getIfscCode().equalsIgnoreCase(ifscCode)) ? "Invalid IFSC Code" : "verified";
     }
 
-    public static String processPayment(String senderAccountNumber, String ifscCode, String receiverAccountNumber, double amount, String note) {
-    	String accountVerificationResult = verifyAccountNumber(senderAccountNumber);
-        if (accountVerificationResult.equals("Invalid Account Number")) {
-            return accountVerificationResult;
+    // Process bank payment
+    public String processPayment(String senderAccountNumber, String ifscCode, String receiverAccountNumber, double amount, String note) {
+        String senderVerification = verifyAccountNumber(senderAccountNumber);
+        if (!senderVerification.equals("verified")) {
+            return senderVerification;
         }
 
-        String ifscVerificationResult = verifyIfscCode(senderAccountNumber, ifscCode);
-        if (ifscVerificationResult.equals("Invalid IFSC Code")) {
-            return ifscVerificationResult;
+        String ifscVerification = verifyIfscCode(senderAccountNumber, ifscCode);
+        if (!ifscVerification.equals("verified")) {
+            return ifscVerification;
         }
 
-        String receiverVerificationResult = verifyAccountNumber(receiverAccountNumber);
-        if (receiverVerificationResult.equals("Invalid Account Number")) {
-            return receiverVerificationResult;
+        String receiverVerification = verifyAccountNumber(receiverAccountNumber);
+        if (!receiverVerification.equals("verified")) {
+            return receiverVerification;
         }
-    	BankUser sender = bankuserRepository.findUserByAccountNumber(senderAccountNumber);
-        BankUser receiver = bankuserRepository.findUserByAccountNumber(receiverAccountNumber);
 
-        // Check if the account has sufficient balance
+        BankUser sender = bankUserRepository.findUserByAccountNumber(senderAccountNumber);
+        BankUser receiver = bankUserRepository.findUserByAccountNumber(receiverAccountNumber);
+
         if (sender.getBalance() < amount) {
             return "Error: Insufficient funds.";
         }
 
-        // Deduct amount from sender and add to receiver
         sender.setBalance(sender.getBalance() - amount);
         receiver.setBalance(receiver.getBalance() + amount);
 
-        // Record the transaction
-        BankTransaction bankTransaction = new BankTransaction(senderAccountNumber, ifscCode, receiverAccountNumber, amount, new Date(), note, "Success");
-        banktransactionRepository.saveTransaction(bankTransaction);
+        bankUserRepository.updateUser(sender);
+        bankUserRepository.updateUser(receiver);
 
-        System.out.println("Payment of " + amount + " from " + sender.getCustName() + " ACCOUNT NUMBER :" + senderAccountNumber + " To " + receiver.getCustName() + " ACCOUNT NUMBER : " + receiverAccountNumber + " is done.");
+        BankTransaction transaction = new BankTransaction(senderAccountNumber, ifscCode, receiverAccountNumber, amount, new Date(), note, "Success");
+        bankTransactionRepository.saveTransaction(transaction);
+
         return "Transaction Successful.";
     }
+    
+    // Get user balance
+    public double getBalance(String accountNumber) {
+        BankUser user = bankUserRepository.findUserByAccountNumber(accountNumber);
+        return user != null ? user.getBalance() : 0.0;
+    }
 
+    // Get transaction history for the user
+    public List<BankTransaction> getTransactionHistory(String accountNumber) {
+        return bankTransactionRepository.findTransactionsByAccountNumber(accountNumber);
+    }
 }

@@ -1,23 +1,24 @@
 /**
- * Module Name: BankAccount
- * 
- * Description:This module represents a bank account entity within the payment system to store and manage 
- * information related to a customer's bank account. It can be used to verify account details, check balance,
- * and update information as required.
+ * Module Name: BankUser
+ *
+ * Description: This module represents a bank user in the payment system. 
+ * The class provides getter and setter methods for accessing and modifying these attributes, 
+ * facilitating user management within the banking application.
  * 
  * Author:
- * Deepak Reddy
+ * Hasini Sai Ramya
  * 
- * Date: August 10,2024
+ * Date: August 20, 2024
+ * 
  */
+
 
 package com.ezpay.payment.model;
 
 public class BankUser {
-
+    private String custName;
     private String accountNumber;
     private String ifscCode;
-    private String custName;
     private double balance;
 
     public BankUser(String custName, String accountNumber, String ifscCode, double balance) {
@@ -27,18 +28,29 @@ public class BankUser {
         this.balance = balance;
     }
 
-    //setters and getters
-
+    // Getters and Setters
     public String getCustName() {
         return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
     }
 
     public String getAccountNumber() {
         return accountNumber;
     }
 
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     public String getIfscCode() {
         return ifscCode;
+    }
+
+    public void setIfscCode(String ifscCode) {
+        this.ifscCode = ifscCode;
     }
 
     public double getBalance() {
@@ -48,5 +60,4 @@ public class BankUser {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-
 }
