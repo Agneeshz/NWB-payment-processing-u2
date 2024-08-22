@@ -20,14 +20,14 @@ public class UPITransactionRepository {
     public void saveTransaction(UPITransaction transaction) {
         try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
             String query = "INSERT INTO upi_transactions (sender_upi_id, receiver_upi_id, amount, transaction_date, note, status) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, transaction.getSenderUpiId());
-            stmt.setString(2, transaction.getReceiverUpiId());
-            stmt.setDouble(3, transaction.getAmount());
-            stmt.setDate(4, new java.sql.Date(transaction.getDate().getTime()));
-            stmt.setString(5, transaction.getNote());
-            stmt.setString(6, transaction.getStatus());
-            stmt.executeUpdate();
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, transaction.getSenderUpiId());
+            statement.setString(2, transaction.getReceiverUpiId());
+            statement.setDouble(3, transaction.getAmount());
+            statement.setDate(4, new java.sql.Date(transaction.getDate().getTime()));
+            statement.setString(5, transaction.getNote());
+            statement.setString(6, transaction.getStatus());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,18 +36,18 @@ public class UPITransactionRepository {
     public List<UPITransaction> findTransactionsByUpiId(String upiId) {
         List<UPITransaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM upi_transactions WHERE sender_upi_id = ? OR receiver_upi_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, upiId);
-            stmt.setString(2, upiId);
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, upiId);
+            statement.setString(2, upiId);
+            ResultSet result = statement.executeQuery();
 
-            while (rs.next()) {
-                String senderUpiId = rs.getString("sender_upi_id");
-                String receiverUpiId = rs.getString("receiver_upi_id");
-                double amount = rs.getDouble("amount");
-                Date transactionDate = rs.getDate("transaction_date");
-                String note = rs.getString("note");
-                String status = rs.getString("status");
+            while (result.next()) {
+                String senderUpiId = result.getString("sender_upi_id");
+                String receiverUpiId = result.getString("receiver_upi_id");
+                double amount = result.getDouble("amount");
+                Date transactionDate = result.getDate("transaction_date");
+                String note = result.getString("note");
+                String status = result.getString("status");
 
                 UPITransaction transaction = new UPITransaction(senderUpiId, receiverUpiId, amount, transactionDate, note, status);
                 transactions.add(transaction);
