@@ -135,10 +135,22 @@ public class BankTransferPaymentController {
             return; // Exit the method if receiver account number is invalid
         }
 
+        // Check if sender and receiver account numbers are the same
+        if (senderAccountNumber.equals(receiverAccountNumber)) {
+            System.out.println("Error: Sender and receiver account numbers cannot be the same.");
+            return; // Exit the method if they are the same
+        }
+
         // Prompt for amount to send
         System.out.println("Enter amount to send:");
         double amount = scanner.nextDouble();
         scanner.nextLine(); // consume newline
+
+        // Validate the amount for negative values
+        if (amount < 0) {
+            System.out.println("Invalid amount. Amount cannot be negative.");
+            return; // Exit the method if the amount is invalid
+        }
 
         // Prompt for transaction note
         System.out.println("Enter note for the transaction (optional):");
@@ -161,7 +173,7 @@ public class BankTransferPaymentController {
             System.out.println("Transaction canceled.");
         }
     }
-
+    
     private void checkTransactions(Scanner scanner, BankService bankService) {
         System.out.println("Enter your Account Number:");
         String accountNumber = scanner.nextLine();
