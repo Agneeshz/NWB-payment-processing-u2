@@ -15,7 +15,6 @@
 package com.ezpay.payment.controller;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.List;
@@ -24,22 +23,21 @@ import com.ezpay.payment.model.BankTransaction;
 import com.ezpay.payment.repository.BankUserRepository;
 import com.ezpay.payment.repository.BankTransactionRepository;
 import com.ezpay.payment.service.BankService;
+import com.ezpay.payment.util.DBConnection;
 
 public class BankTransferPaymentController {
 
-    private Connection connection;
+	private Connection connection;
 
     public BankTransferPaymentController() {
         try {
-            String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe"; // Update this URL based on your DB
-            String jdbcUser = "system"; // Update with your DB user
-            String jdbcPassword = "natwest123"; // Update with your DB password
-            connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+            connection = DBConnection.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to connect to the database");
         }
     }
+
 
     public void bankDetails() {
         BankUserRepository bankUserRepository = new BankUserRepository(connection);

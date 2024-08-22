@@ -1,7 +1,6 @@
 package com.ezpay.payment.controller;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
@@ -10,18 +9,15 @@ import com.ezpay.payment.model.UPITransaction;
 import com.ezpay.payment.repository.UPIRepository;
 import com.ezpay.payment.repository.UPITransactionRepository;
 import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.util.DBConnection;
 
 public class UPIPaymentController {
 
-    private Connection connection;
+	private Connection connection;
 
     public UPIPaymentController() {
         try {
-            // Setup JDBC connection
-            String jdbcUrl = "jdbc:oracle:thin:@localhost:1521:xe"; // Update this URL based on your DB
-            String jdbcUser = "system"; // Update with your DB user
-            String jdbcPassword = "natwest123"; // Update with your DB password
-            connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+            connection = DBConnection.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to connect to the database");
@@ -41,24 +37,20 @@ public class UPIPaymentController {
 
         while (true) {
             System.out.println("Select an option:");
-            System.out.println("1. Check Balance");
-            System.out.println("2. Transfer Funds");
-            System.out.println("3. Check Transactions");
-            System.out.println("4. Exit");
+            System.out.println("1. Transfer Funds");
+            System.out.println("2. Check Transactions");
+            System.out.println("3. Exit");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
             switch (choice) {
                 case 1:
-                    checkBalance(scanner, upiService);
-                    break;
-                case 2:
                     transferFunds(scanner, upiService);
                     break;
-                case 3:
+                case 2:
                     checkTransactions(scanner, upiService);
                     break;
-                case 4:
+                case 3:
                     System.out.println("Exiting...");
                     scanner.close();
                     closeConnection();
@@ -78,20 +70,6 @@ public class UPIPaymentController {
         }
     }
     
-    private void checkBalance(Scanner scanner, UPIService upiService) {
-        System.out.println("Enter your UPI ID:");
-        String upiId = scanner.nextLine();
-
-        // Verify account number
-        String verification = upiService.verifyUpiId(upiId);
-        if (!verification.equals("verified")) {
-            System.out.println("Invalid UPI ID."); // Updated message
-            return; // Exit the method if account number is invalid
-        }
-
-        double balance = upiService.getBalance(upiId);
-        System.out.println("Your current balance is: " + balance);
-    }
 
     public void transferFunds(Scanner scanner, UPIService upiService) {
         System.out.println("Enter your UPI ID:");
