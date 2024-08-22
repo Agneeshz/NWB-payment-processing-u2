@@ -1,3 +1,17 @@
+/**
+ * Module Name: BankTransferPaymentController
+ *
+ * Description: This module handles user interactions, allowing users to check their bank balance, transfer funds 
+ * between accounts, and view their transaction history.User input is captured through the console, providing a simple interface for 
+ * managing bank transactions. 
+ *
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
 package com.ezpay.payment.controller;
 
 import java.sql.Connection;

@@ -1,3 +1,17 @@
+/**
+ * Module Name: BankTransactionRepository
+ *
+ * Description: This module  provides methods for saving bank transactions and retrieving transaction history based on account numbers. 
+ * The class interacts with the database using JDBC to execute SQL queries and handle the underlying connection to the database.
+ * 
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
+
 package com.ezpay.payment.repository;
 
 import com.ezpay.payment.model.BankTransaction;

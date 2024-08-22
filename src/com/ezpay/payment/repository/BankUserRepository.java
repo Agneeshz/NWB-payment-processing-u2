@@ -1,3 +1,17 @@
+/**
+ * Module Name: BankUserRepository
+ *
+ * Description: This module provides methods for finding a bank user by their account number and updating the user's details, 
+ * including their balance. The class interacts with the database using JDBC to execute SQL queries and manage database connections.
+ * 
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
+
 package com.ezpay.payment.repository;
 
 import com.ezpay.payment.model.BankUser;

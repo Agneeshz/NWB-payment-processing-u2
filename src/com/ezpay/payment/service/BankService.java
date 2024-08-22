@@ -1,3 +1,17 @@
+/**
+ * Module Name: BankService
+ *
+ * Description: The BankService class providesmethods for verifying account numbers and IFSC codes, processing payments, 
+ * retrieving user balances, and fetching transaction histories. .
+ * 
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
+
 package com.ezpay.payment.service;
 
 import com.ezpay.payment.model.BankTransaction;

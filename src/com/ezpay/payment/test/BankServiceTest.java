@@ -1,57 +1,150 @@
 /**
- * Module Name: BankAccountServiceTest
+ * Module Name: BankServiceTest
  *
- * Description:This module tests the functionality of the BankAccountService class, ensuring that bank account
+ * Description: This module tests the functionality of the BankService class, ensuring that bank account
  * transactions are processed correctly based on various conditions like sufficient balance, invalid account 
  * numbers, etc.
  * 
  * Author:
  * Aishveen Kaur
  * 
- * Date: August 10, 2024
- * */
+ * Date: August 22, 2024
+ */
 
 package com.ezpay.payment.test;
 
 import com.ezpay.payment.repository.BankTransactionRepository;
+import com.ezpay.payment.model.BankTransaction;
 import com.ezpay.payment.repository.BankUserRepository;
 import com.ezpay.payment.service.BankService;
+import com.ezpay.payment.util.DBConnection;
+import org.junit.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
 
 public class BankServiceTest {
-    
-	private BankService bankService;
+
+    private BankService bankService;
+    private BankUserRepository bankUserRepository;
+    private BankTransactionRepository bankTransactionRepository;
+    private Connection connection;
 
     @Before
-    public void setUp() {
-        BankUserRepository bankUserRepository = new BankUserRepository();
-        BankTransactionRepository bankTransactionRepository = new BankTransactionRepository();
+    public void setUp() throws SQLException {
+        // Setup Oracle Database connection using DBConnection
+        connection = DBConnection.getConnection();
+        createTables(connection);
+
+        bankUserRepository = new BankUserRepository(connection);
+        bankTransactionRepository = new BankTransactionRepository(connection);
         bankService = new BankService(bankUserRepository, bankTransactionRepository);
+
+        // Insert initial test data
+        insertTestData(connection);
     }
-        
-        
-        // Test valid transaction
-        @Test 
-        public void testValidTransaction(){
-        String result = bankService.processPayment("99887744556", "SBIN096321", "88997755664", 1000, "Payment for dinner");
-        assertEquals("Transaction Successful.", result);
+
+    @After
+    public void tearDown() throws SQLException {
+        // Clean up the database after each test
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("DROP TABLE bank_transactions");
+            stmt.execute("DROP TABLE bank_user");
         }
 
-        // Test invalid account number
-        @Test 
-        public void testInvalidAccountNumber(){
-        String result = bankService.processPayment("99662211523", "SBIN096321", "99887744556", 1000, "");
+        // Close the connection
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+    }
+
+    @Test
+    public void testVerifyAccountNumber_Valid() {
+        String result = bankService.verifyAccountNumber("12345");
+        assertEquals("verified", result);
+    }
+
+    @Test
+    public void testVerifyAccountNumber_Invalid() {
+        String result = bankService.verifyAccountNumber("99999");
         assertEquals("Invalid Account Number", result);
-        }
+    }
 
-        // Test insufficient funds
-        @Test 
-        public void testInsufficientFunds(){
-        String result = bankService.processPayment("88662211335", "SBIN098512", "88997755661", 100000, "Payment for car");
+    @Test
+    public void testVerifyIfscCode_Valid() {
+        String result = bankService.verifyIfscCode("12345", "IFSC001");
+        assertEquals("verified", result);
+    }
+
+    @Test
+    public void testVerifyIfscCode_Invalid() {
+        String result = bankService.verifyIfscCode("12345", "INVALID_IFSC");
+        assertEquals("Invalid IFSC Code", result);
+    }
+
+    @Test
+    public void testProcessPayment_Success() {
+        String result = bankService.processPayment("12345", "IFSC001", "67890", 500.0, "Test Payment");
+        assertEquals("Transaction Successful.", result);
+
+        double senderBalance = bankService.getBalance("12345");
+        double receiverBalance = bankService.getBalance("67890");
+
+        assertEquals(4500.0, senderBalance, 0.001);
+        assertEquals(3500.0, receiverBalance, 0.001);
+    }
+
+    @Test
+    public void testProcessPayment_InsufficientFunds() {
+        String result = bankService.processPayment("12345", "IFSC001", "67890", 6000.0, "Test Payment");
         assertEquals("Error: Insufficient funds.", result);
+    }
+
+    @Test
+    public void testGetBalance() {
+        double balance = bankService.getBalance("12345");
+        assertEquals(5000.0, balance, 0.001);
+    }
+
+    @Test
+    public void testGetTransactionHistory() {
+        bankService.processPayment("12345", "IFSC001", "67890", 500.0, "Test Payment");
+
+        List<BankTransaction> transactions = bankService.getTransactionHistory("12345");
+        assertEquals(1, transactions.size());
+        assertEquals(500.0, transactions.get(0).getAmount(), 0.001);
+    }
+
+    // Helper methods to set up the Oracle database and test data
+    private void createTables(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("CREATE TABLE bank_user (" +
+                    "CUST_NAME VARCHAR2(255) NOT NULL, " +
+                    "ACCOUNT_NUMBER VARCHAR2(20) NOT NULL, " +
+                    "IFSC_CODE VARCHAR2(11) NOT NULL, " +
+                    "BALANCE NUMBER(15,2) NOT NULL)");
+
+            stmt.execute("CREATE TABLE bank_transactions (" +
+                    "SENDER_ACCOUNT_NUMBER VARCHAR2(20), " +
+                    "IFSC_CODE VARCHAR2(11), " +
+                    "RECEIVER_ACCOUNT_NUMBER VARCHAR2(20), " +
+                    "AMOUNT NUMBER(10,2), " +
+                    "TRANSACTION_DATE DATE, " +
+                    "NOTE VARCHAR2(255), " +
+                    "STATUS VARCHAR2(20))");
         }
-    
+    }
+
+    private void insertTestData(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("INSERT INTO bank_user (CUST_NAME, ACCOUNT_NUMBER, IFSC_CODE, BALANCE) VALUES " +
+                    "('John Doe', '12345', 'IFSC001', 5000.0)");
+            stmt.execute("INSERT INTO bank_user (CUST_NAME, ACCOUNT_NUMBER, IFSC_CODE, BALANCE) VALUES " +
+                    "('Jane Doe', '67890', 'IFSC002', 3000.0)");
+        }
+    }
 }

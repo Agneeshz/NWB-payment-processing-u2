@@ -1,3 +1,18 @@
+/**
+ * Module Name: BankUser
+ *
+ * Description: This module represents a bank user in the payment system. 
+ * The class provides getter and setter methods for accessing and modifying these attributes, 
+ * facilitating user management within the banking application.
+ * 
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
+
 package com.ezpay.payment.model;
 
 public class BankUser {

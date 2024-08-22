@@ -1,3 +1,18 @@
+/**
+ * Module Name: BankTransaction
+ *
+ * Description: This module represents a bank transaction in the payment system. 
+ * It encapsulates details about the transaction, including the sender's and receiver's 
+ * account numbers, the IFSC code, the transaction amount, date, any notes associated 
+ * with the transaction, and the status of the transaction. 
+ * 
+ * Author:
+ * Hasini Sai Ramya
+ * 
+ * Date: August 20, 2024
+ * 
+ */
+
 package com.ezpay.payment.model;
 
 import java.util.Date;
