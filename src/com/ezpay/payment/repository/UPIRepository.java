@@ -29,14 +29,14 @@ public class UPIRepository {
     }
     public UPI findUserByUpiId(String upiId) {
     	String query = "SELECT * FROM upi WHERE upi_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {            
-            stmt.setString(1, upiId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String custName = rs.getString("cust_name");
-                double balance = rs.getDouble("balance");
-                long mobileNumber = rs.getLong("mobile_number");
-                String email = rs.getString("email");
+        try (PreparedStatement statement = connection.prepareStatement(query)) {            
+            statement.setString(1, upiId);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                String custName = result.getString("cust_name");
+                double balance = result.getDouble("balance");
+                long mobileNumber = result.getLong("mobile_number");
+                String email = result.getString("email");
                 return new UPI(custName, upiId, balance, mobileNumber, email);
             }
         } catch (SQLException e) {
@@ -48,10 +48,10 @@ public class UPIRepository {
     public void updateUser(UPI upi) {
         try (Connection conn = DBConnection.getConnection()) { // Changed to DBConnection
             String query = "UPDATE upi SET balance = ? WHERE upi_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setDouble(1, upi.getBalance());
-            stmt.setString(2, upi.getUpiId());
-            stmt.executeUpdate();
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setDouble(1, upi.getBalance());
+            statement.setString(2, upi.getUpiId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
