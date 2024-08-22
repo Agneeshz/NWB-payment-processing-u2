@@ -31,14 +31,14 @@ public class BankUserRepository {
     // Find BankUser by Account Number
     public BankUser findUserByAccountNumber(String accountNumber) {
         String query = "SELECT * FROM bank_user WHERE account_number = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) { // Use the stored connection
-            stmt.setString(1, accountNumber);
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(query)) { // Use the stored connection
+            statement.setString(1, accountNumber);
+            ResultSet result = statement.executeQuery();
 
-            if (rs.next()) {
-                String custName = rs.getString("cust_name");
-                String ifscCode = rs.getString("ifsc_code");
-                double balance = rs.getDouble("balance");
+            if (result.next()) {
+                String custName = result.getString("cust_name");
+                String ifscCode = result.getString("ifsc_code");
+                double balance = result.getDouble("balance");
                 return new BankUser(custName, accountNumber, ifscCode, balance);
             }
         } catch (SQLException e) {
@@ -50,10 +50,10 @@ public class BankUserRepository {
     // Update BankUser's details
     public void updateUser(BankUser bankUser) {
         String query = "UPDATE bank_user SET balance = ? WHERE account_number = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setDouble(1, bankUser.getBalance());
-            stmt.setString(2, bankUser.getAccountNumber());
-            stmt.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setDouble(1, bankUser.getBalance());
+            statement.setString(2, bankUser.getAccountNumber());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
