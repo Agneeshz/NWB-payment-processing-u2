@@ -1,16 +1,16 @@
 /**
  * Module Name: UPIServiceTest
+ *
+ * Description: This module tests the functionality of the UPIService class, ensuring that UPI transactions 
+ * are processed correctly under various scenarios. It includes tests for valid transactions, invalid UPI IDs, 
+ * insufficient funds, zero and negative transaction amounts, self-payment attempts, and large transaction amounts. 
+ * The tests also validate handling of null UPI IDs for both sender and receiver and verify if the transactions 
+ * are correctly recorded in the transaction history.
  * 
- * Description: This module contains unit test cases for the UPIService class. 
- * It verifies the correctness of UPI transactions, including edge cases such as invalid UPI IDs, 
- * insufficient funds, self-payments, zero and negative transaction amounts, 
- * and ensuring that transaction history is properly recorded. The tests are designed to run 
- * in isolation with each test rolling back its changes to maintain the database state.
+ * Author: 
+ * Deepak Reddy
  * 
- * Author:
- * Deepak Reddy Bijivemula
- * 
- * Date: August 23, 2024
+ * Date: August 22, 2024
  */
 
 package com.ezpay.payment.test;
@@ -132,11 +132,11 @@ public class UPIServiceTest {
         upiService.processPayment("deepak@oksbi", "agneesh@oksbi", 1000, "Payment for test history");
         
         // Query the database to check if the transaction was recorded
-        PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM UPI_Transactions WHERE SENDER_UPI_ID = ?");
-        pstmt.setString(1, "deepak@oksbi");
-        ResultSet rs = pstmt.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM UPI_Transactions WHERE SENDER_UPI_ID = ?");
+        preparedStatement.setString(1, "deepak@oksbi");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int count = resultSet.getInt(1);
         
         // Assert that at least one transaction was recorded
         assertTrue(count > 0);
