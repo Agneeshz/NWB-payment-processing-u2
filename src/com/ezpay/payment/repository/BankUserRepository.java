@@ -1,5 +1,5 @@
 /**
- * 
+ * Module description: This module takes the classes and implements the repositories using queries.
  */
 package com.ezpay.payment.repository;
 
