@@ -59,36 +59,36 @@ public class BankServiceTest {
     }
 
 
+    // Test for valid account number verification
     @Test
-    // Test case for valid account number verification
     public void testVerifyAccountNumber_Valid() {
         String result = bankService.verifyAccountNumber("12345");
         assertEquals("verified", result);
     }
 
+    // Test for invalid account number verification
     @Test
-    // Test case for invalid account number verification
     public void testVerifyAccountNumber_Invalid() {
         String result = bankService.verifyAccountNumber("99999");
         assertEquals("Invalid Account Number", result);
     }
 
+    // Test for valid ifsc code verification
     @Test
-    // Test case for valid ifsc code verification
     public void testVerifyIfscCode_Valid() {
         String result = bankService.verifyIfscCode("12345", "IFSC001");
         assertEquals("verified", result);
     }
 
+    // Test for invalid ifsc code verification
     @Test
-    // Test case for invalid ifsc code verification
     public void testVerifyIfscCode_Invalid() {
         String result = bankService.verifyIfscCode("12345", "INVALID_IFSC");
         assertEquals("Invalid IFSC Code", result);
     }
 
+    // Test to check successful transaction
     @Test
-    // Test case to check successful transaction
     public void testProcessPayment_Success() {
         String result = bankService.processPayment("12345", "IFSC001", "67890", 500.0, "Test Payment");
         assertEquals("Transaction Successful.", result);
@@ -100,22 +100,22 @@ public class BankServiceTest {
         assertEquals(3500.0, receiverBalance, 0.001);
     }
 
+    // Test to check insufficient funds case
     @Test
-    // Test case to check insufficient funds case
     public void testProcessPayment_InsufficientFunds() {
         String result = bankService.processPayment("12345", "IFSC001", "67890", 6000.0, "Test Payment");
         assertEquals("Error: Insufficient funds.", result);
     }
 
+    // Test to check the amount in a particular user account
     @Test
-    // Test case to check the amount in a particular user account
     public void testGetBalance() {
         double balance = bankService.getBalance("12345");
         assertEquals(5000.0, balance, 0.001);
     }
 
+    // Test to check the transaction history
     @Test
-    // Test case to check the transaction history
     public void testGetTransactionHistory() {
         bankService.processPayment("12345", "IFSC001", "67890", 500.0, "Test Payment");
 
