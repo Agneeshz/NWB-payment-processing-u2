@@ -61,35 +61,35 @@ public class BankServiceTest {
 
     // Test for valid account number verification
     @Test
-    public void testVerifyAccountNumber_Valid() {
+    public void testVerifyAccountNumberValid() {
         String result = bankService.verifyAccountNumber("12345");
         assertEquals("verified", result);
     }
 
     // Test for invalid account number verification
     @Test
-    public void testVerifyAccountNumber_Invalid() {
+    public void testVerifyAccountNumberInvalid() {
         String result = bankService.verifyAccountNumber("99999");
         assertEquals("Invalid Account Number", result);
     }
 
     // Test for valid ifsc code verification
     @Test
-    public void testVerifyIfscCode_Valid() {
+    public void testVerifyIfscCodeValid() {
         String result = bankService.verifyIfscCode("12345", "IFSC001");
         assertEquals("verified", result);
     }
 
     // Test for invalid ifsc code verification
     @Test
-    public void testVerifyIfscCode_Invalid() {
+    public void testVerifyIfscCodeInvalid() {
         String result = bankService.verifyIfscCode("12345", "INVALID_IFSC");
         assertEquals("Invalid IFSC Code", result);
     }
 
     // Test to check successful transaction
     @Test
-    public void testProcessPayment_Success() {
+    public void testProcessPaymentSuccess() {
         String result = bankService.processPayment("12345", "IFSC001", "67890", 500.0, "Test Payment");
         assertEquals("Transaction Successful.", result);
 
@@ -102,7 +102,7 @@ public class BankServiceTest {
 
     // Test to check insufficient funds case
     @Test
-    public void testProcessPayment_InsufficientFunds() {
+    public void testProcessPaymentInsufficientFunds() {
         String result = bankService.processPayment("12345", "IFSC001", "67890", 6000.0, "Test Payment");
         assertEquals("Error: Insufficient funds.", result);
     }

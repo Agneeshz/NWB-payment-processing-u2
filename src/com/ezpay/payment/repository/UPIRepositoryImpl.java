@@ -36,6 +36,12 @@ public class UPIRepositoryImpl implements UPIRepository {
      * @return A UPI object containing user details if found, otherwise null.
      */
     public UPI findUserByUpiId(String upiId) {
+    	try {
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         try (PreparedStatement preparedStatement = connection.prepareStatement(QUERY_USERID)) {
             preparedStatement.setString(1, upiId);  // Set the UPI ID parameter in the query
             ResultSet resultSet = preparedStatement.executeQuery();  // Execute the query
@@ -44,6 +50,7 @@ public class UPIRepositoryImpl implements UPIRepository {
                 double balance = resultSet.getDouble("balance");  // Retrieve balance
                 long mobileNumber = resultSet.getLong("mobile_number");  // Retrieve mobile number
                 String email = resultSet.getString("email");  // Retrieve email
+                connection.commit();
                 return new UPI(custName, upiId, balance, mobileNumber, email);  // Return a UPI object with the retrieved details
             }
         } catch (SQLException e) {
