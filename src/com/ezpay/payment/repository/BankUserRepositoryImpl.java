@@ -38,6 +38,7 @@ public class BankUserRepositoryImpl implements BankUserRepository {
                 String custName = resultSet.getString("cust_name");
                 String ifscCode = resultSet.getString("ifsc_code");
                 double balance = resultSet.getDouble("balance");
+                connection.commit();
                 return new BankUser(custName, accountNumber, ifscCode, balance);
             }
         } catch (SQLException e) {
