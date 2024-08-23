@@ -1,5 +1,5 @@
 /**
- * Module description: This module provides methods for saving UPI transactions and finding transactions based on a Bank account details.
+ * Module description: This module provides methods for saving transactions and finding transactions based on a Bank account details.
  * It helps in implementing classes to perform database operations related to Bank transactions. The queries defined within this interface help 
  * to insert new transactions and retrieve transaction records based on the sender's or receiver's Bank account details.
  */
