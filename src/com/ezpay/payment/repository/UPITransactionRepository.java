@@ -41,14 +41,14 @@ public class UPITransactionRepository {
     public void saveTransaction(UPITransaction transaction) {
         try (Connection conn = DBConnection.getConnection()) {  // Get a new database connection
             String query = "INSERT INTO upi_transactions (sender_upi_id, receiver_upi_id, amount, transaction_date, note, status) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, transaction.getSenderUpiId());  // Set the sender UPI ID
-            statement.setString(2, transaction.getReceiverUpiId());  // Set the receiver UPI ID
-            statement.setDouble(3, transaction.getAmount());  // Set the transaction amount
-            statement.setDate(4, new java.sql.Date(transaction.getDate().getTime()));  // Set the transaction date
-            statement.setString(5, transaction.getNote());  // Set the transaction note
-            statement.setString(6, transaction.getStatus());  // Set the transaction status
-            statement.executeUpdate();  // Execute the insert query
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, transaction.getSenderUpiId());  // Set the sender UPI ID
+            preparedStatement.setString(2, transaction.getReceiverUpiId());  // Set the receiver UPI ID
+            preparedStatement.setDouble(3, transaction.getAmount());  // Set the transaction amount
+            preparedStatement.setDate(4, new java.sql.Date(transaction.getDate().getTime()));  // Set the transaction date
+            preparedStatement.setString(5, transaction.getNote());  // Set the transaction note
+            preparedStatement.setString(6, transaction.getStatus());  // Set the transaction status
+            preparedStatement.executeUpdate();  // Execute the insert query
         } catch (SQLException e) {
             e.printStackTrace();  // Print stack trace if an SQL exception occurs
         }
@@ -63,18 +63,18 @@ public class UPITransactionRepository {
     public List<UPITransaction> findTransactionsByUpiId(String upiId) {
         List<UPITransaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM upi_transactions WHERE sender_upi_id = ? OR receiver_upi_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, upiId);  // Set the UPI ID as the sender
-            statement.setString(2, upiId);  // Set the UPI ID as the receiver
-            ResultSet result = statement.executeQuery();  // Execute the query to retrieve transactions
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, upiId);  // Set the UPI ID as the sender
+            preparedStatement.setString(2, upiId);  // Set the UPI ID as the receiver
+            ResultSet resultSet = preparedStatement.executeQuery();  // Execute the query to retrieve transactions
 
-            while (result.next()) {
-                String senderUpiId = result.getString("sender_upi_id");  // Retrieve sender UPI ID
-                String receiverUpiId = result.getString("receiver_upi_id");  // Retrieve receiver UPI ID
-                double amount = result.getDouble("amount");  // Retrieve transaction amount
-                Date transactionDate = result.getDate("transaction_date");  // Retrieve transaction date
-                String note = result.getString("note");  // Retrieve transaction note
-                String status = result.getString("status");  // Retrieve transaction status
+            while (resultSet.next()) {
+                String senderUpiId = resultSet.getString("sender_upi_id");  // Retrieve sender UPI ID
+                String receiverUpiId = resultSet.getString("receiver_upi_id");  // Retrieve receiver UPI ID
+                double amount = resultSet.getDouble("amount");  // Retrieve transaction amount
+                Date transactionDate = resultSet.getDate("transaction_date");  // Retrieve transaction date
+                String note = resultSet.getString("note");  // Retrieve transaction note
+                String status = resultSet.getString("status");  // Retrieve transaction status
 
                 // Create a UPITransaction object and add it to the list
                 UPITransaction transaction = new UPITransaction(senderUpiId, receiverUpiId, amount, transactionDate, note, status);

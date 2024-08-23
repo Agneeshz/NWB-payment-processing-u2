@@ -31,14 +31,14 @@ public class BankUserRepository {
     // Find BankUser by Account Number
     public BankUser findUserByAccountNumber(String accountNumber) {
         String query = "SELECT * FROM bank_user WHERE account_number = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) { // Use the stored connection
-            statement.setString(1, accountNumber);
-            ResultSet result = statement.executeQuery();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) { // Use the stored connection
+            preparedStatement.setString(1, accountNumber);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (result.next()) {
-                String custName = result.getString("cust_name");
-                String ifscCode = result.getString("ifsc_code");
-                double balance = result.getDouble("balance");
+            if (resultSet.next()) {
+                String custName = resultSet.getString("cust_name");
+                String ifscCode = resultSet.getString("ifsc_code");
+                double balance = resultSet.getDouble("balance");
                 return new BankUser(custName, accountNumber, ifscCode, balance);
             }
         } catch (SQLException e) {
@@ -50,10 +50,10 @@ public class BankUserRepository {
     // Update BankUser's details
     public void updateUser(BankUser bankUser) {
         String query = "UPDATE bank_user SET balance = ? WHERE account_number = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setDouble(1, bankUser.getBalance());
-            statement.setString(2, bankUser.getAccountNumber());
-            statement.executeUpdate();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setDouble(1, bankUser.getBalance());
+            preparedStatement.setString(2, bankUser.getAccountNumber());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
