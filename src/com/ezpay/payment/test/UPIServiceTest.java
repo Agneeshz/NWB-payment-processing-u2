@@ -117,11 +117,11 @@ public class UPIServiceTest {
         upiService.processPayment("deepak@oksbi", "agneesh@oksbi", 1000, "Payment for test history");
         
         // Query the database to check if the transaction was recorded
-        PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM UPI_Transactions WHERE SENDER_UPI_ID = ?");
-        pstmt.setString(1, "deepak@oksbi");
-        ResultSet rs = pstmt.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM UPI_Transactions WHERE SENDER_UPI_ID = ?");
+        preparedStatement.setString(1, "deepak@oksbi");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int count = resultSet.getInt(1);
         
         // Assert that at least one transaction was recorded
         assertTrue(count > 0);
