@@ -13,10 +13,10 @@
 
 package com.ezpay.payment.test;
 
-import com.ezpay.payment.repository.BankTransactionRepository;
+import com.ezpay.payment.repository.BankTransactionRepositoryImpl;
 import com.ezpay.payment.model.BankTransaction;
-import com.ezpay.payment.repository.BankUserRepository;
-import com.ezpay.payment.service.BankService;
+import com.ezpay.payment.repository.BankUserRepositoryImpl;
+import com.ezpay.payment.service.BankServiceImpl;
 import com.ezpay.payment.util.DBConnection;
 import org.junit.*;
 
@@ -29,9 +29,9 @@ import static org.junit.Assert.assertEquals;
 
 public class BankServiceTest {
 
-    private BankService bankService;
-    private BankUserRepository bankUserRepository;
-    private BankTransactionRepository bankTransactionRepository;
+    private BankServiceImpl bankService;
+    private BankUserRepositoryImpl bankUserRepository;
+    private BankTransactionRepositoryImpl bankTransactionRepository;
     private Connection connection;
 
     @Before
@@ -41,9 +41,9 @@ public class BankServiceTest {
         
         connection.setAutoCommit(false);
 
-        bankUserRepository = new BankUserRepository(connection);
-        bankTransactionRepository = new BankTransactionRepository(connection);
-        bankService = new BankService(bankUserRepository, bankTransactionRepository);
+        bankUserRepository = new BankUserRepositoryImpl(connection);
+        bankTransactionRepository = new BankTransactionRepositoryImpl(connection);
+        bankService = new BankServiceImpl(bankUserRepository, bankTransactionRepository);
 
         // Insert initial test data
         insertTestData(connection);

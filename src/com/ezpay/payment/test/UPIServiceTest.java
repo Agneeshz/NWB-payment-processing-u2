@@ -15,9 +15,9 @@
 
 package com.ezpay.payment.test;
 
-import com.ezpay.payment.repository.UPIRepository;
-import com.ezpay.payment.repository.UPITransactionRepository;
-import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.repository.UPIRepositoryImpl;
+import com.ezpay.payment.repository.UPITransactionRepositoryImpl;
+import com.ezpay.payment.service.UPIServiceImpl;
 import com.ezpay.payment.util.DBConnection;
 
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ import org.junit.*;
 public class UPIServiceTest {
 
     private static Connection connection;  // Database connection
-    private UPIService upiService;         // Instance of UPIService to be tested
+    private UPIServiceImpl upiService;         // Instance of UPIService to be tested
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -51,9 +51,9 @@ public class UPIServiceTest {
     @Before
     public void setUp() throws Exception {
         // Initialize UPIService and start a transaction before each test
-        UPIRepository userRepository = new UPIRepository(connection);
-        UPITransactionRepository transactionRepository = new UPITransactionRepository(connection);
-        upiService = new UPIService(userRepository, transactionRepository);
+        UPIRepositoryImpl userRepository = new UPIRepositoryImpl(connection);
+        UPITransactionRepositoryImpl transactionRepository = new UPITransactionRepositoryImpl(connection);
+        upiService = new UPIServiceImpl(userRepository, transactionRepository);
         connection.setAutoCommit(false);
     }
 

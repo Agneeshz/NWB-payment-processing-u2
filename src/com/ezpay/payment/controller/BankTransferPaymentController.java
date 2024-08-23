@@ -20,9 +20,9 @@ import java.util.Scanner;
 import java.util.List;
 
 import com.ezpay.payment.model.BankTransaction;
-import com.ezpay.payment.repository.BankUserRepository;
-import com.ezpay.payment.repository.BankTransactionRepository;
-import com.ezpay.payment.service.BankService;
+import com.ezpay.payment.repository.BankUserRepositoryImpl;
+import com.ezpay.payment.repository.BankTransactionRepositoryImpl;
+import com.ezpay.payment.service.BankServiceImpl;
 import com.ezpay.payment.util.DBConnection;
 
 public class BankTransferPaymentController {
@@ -40,9 +40,9 @@ public class BankTransferPaymentController {
 
 
     public void bankDetails() {
-        BankUserRepository bankUserRepository = new BankUserRepository(connection);
-        BankTransactionRepository bankTransactionRepository = new BankTransactionRepository(connection);
-        BankService bankService = new BankService(bankUserRepository, bankTransactionRepository);
+        BankUserRepositoryImpl bankUserRepository = new BankUserRepositoryImpl(connection);
+        BankTransactionRepositoryImpl bankTransactionRepository = new BankTransactionRepositoryImpl(connection);
+        BankServiceImpl bankService = new BankServiceImpl(bankUserRepository, bankTransactionRepository);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -85,7 +85,7 @@ public class BankTransferPaymentController {
         }
     }
 
-    private void checkBalance(Scanner scanner, BankService bankService) {
+    private void checkBalance(Scanner scanner, BankServiceImpl bankService) {
         System.out.println("Enter your Account Number:");
         String accountNumber = scanner.nextLine();
 
@@ -100,7 +100,7 @@ public class BankTransferPaymentController {
         System.out.println("Your current balance is: " + balance);
     }
 
-    private void transferFunds(Scanner scanner, BankService bankService) {
+    private void transferFunds(Scanner scanner, BankServiceImpl bankService) {
         System.out.println("Enter your Account Number:");
         String senderAccountNumber = scanner.nextLine();
 
@@ -172,7 +172,7 @@ public class BankTransferPaymentController {
         }
     }
     
-    private void checkTransactions(Scanner scanner, BankService bankService) {
+    private void checkTransactions(Scanner scanner, BankServiceImpl bankService) {
         System.out.println("Enter your Account Number:");
         String accountNumber = scanner.nextLine();
         

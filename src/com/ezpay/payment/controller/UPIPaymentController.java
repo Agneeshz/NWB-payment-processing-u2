@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.ezpay.payment.model.UPITransaction;
-import com.ezpay.payment.repository.UPIRepository;
-import com.ezpay.payment.repository.UPITransactionRepository;
-import com.ezpay.payment.service.UPIService;
+import com.ezpay.payment.repository.UPIRepositoryImpl;
+import com.ezpay.payment.repository.UPITransactionRepositoryImpl;
+import com.ezpay.payment.service.UPIServiceImpl;
 import com.ezpay.payment.util.DBConnection;
 
 public class UPIPaymentController {
@@ -40,11 +40,11 @@ public class UPIPaymentController {
     
     public void UPIDetails() {
         // Setup repositories with database connection
-        UPIRepository userRepository = new UPIRepository(connection);
-        UPITransactionRepository transactionRepository = new UPITransactionRepository(connection);
+        UPIRepositoryImpl userRepository = new UPIRepositoryImpl(connection);
+        UPITransactionRepositoryImpl transactionRepository = new UPITransactionRepositoryImpl(connection);
         
         // Setup UPI service
-        UPIService upiService = new UPIService(userRepository, transactionRepository);
+        UPIServiceImpl upiService = new UPIServiceImpl(userRepository, transactionRepository);
         
         // User inputs
         Scanner scanner = new Scanner(System.in);
@@ -92,7 +92,7 @@ public class UPIPaymentController {
     }
     
 
-    public void transferFunds(Scanner scanner, UPIService upiService) {
+    public void transferFunds(Scanner scanner, UPIServiceImpl upiService) {
         // User inputs for UPI ID and transaction details
         System.out.println("Enter your UPI ID:");
         String senderUpiId = scanner.nextLine();
@@ -153,7 +153,7 @@ public class UPIPaymentController {
         }
     }
 
-    private void checkTransactions(Scanner scanner, UPIService upiService) {
+    private void checkTransactions(Scanner scanner, UPIServiceImpl upiService) {
         // User input for UPI ID to check transaction history
         System.out.println("Enter your UPI ID:");
         String upiId = scanner.nextLine();
