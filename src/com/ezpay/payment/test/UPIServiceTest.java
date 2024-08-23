@@ -1,3 +1,18 @@
+/**
+ * Module Name: UPIServiceTest
+ * 
+ * Description: This module contains unit test cases for the UPIService class. 
+ * It verifies the correctness of UPI transactions, including edge cases such as invalid UPI IDs, 
+ * insufficient funds, self-payments, zero and negative transaction amounts, 
+ * and ensuring that transaction history is properly recorded. The tests are designed to run 
+ * in isolation with each test rolling back its changes to maintain the database state.
+ * 
+ * Author:
+ * Deepak Reddy Bijivemula
+ * 
+ * Date: August 23, 2024
+ */
+
 package com.ezpay.payment.test;
 
 import com.ezpay.payment.repository.UPIRepository;

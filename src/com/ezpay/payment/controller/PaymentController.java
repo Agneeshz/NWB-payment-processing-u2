@@ -5,51 +5,58 @@
  * mode of payment (UPI or Bank Transfer) and directs the flow to the respective payment detail collection module.
  * 
  * Authors:
- * Agneesh Dasgputa
+ * Agneesh Dasgupta
  * 
- * Date: August 10,2024
+ * Date: August 23, 2024
  */
 
 package com.ezpay.payment.controller;
-
 
 import java.util.Scanner;
 
 public class PaymentController {
 
     public static void main(String[] args) {
-        //Assuming user has already logged in
+        // Assuming the user has already logged in
         Scanner scanner = new Scanner(System.in);
-        boolean flag = true;
+        boolean flag = true; // Flag to control the loop
         while(flag) {
-        System.out.println("Please enter an option for mode of payment:");
-        System.out.println("1. UPI");
-        System.out.println("2. Bank Transfer");
-        System.out.println("3. Exit");
+            // Display payment options to the user
+            System.out.println("Please enter an option for mode of payment:");
+            System.out.println("1. UPI");
+            System.out.println("2. Bank Transfer");
+            System.out.println("3. Exit");
 
-        int choice = scanner.nextInt(); // Read the user choice as an integer
-        scanner.nextLine(); // Consume the newline character left after nextInt()
+            // Read the user's choice as an integer
+            int choice = scanner.nextInt(); 
+            scanner.nextLine(); // Consume the newline character left after nextInt()
 
-        switch (choice) {
-            case 1:
-                UPIPaymentController upiPaymentController = new UPIPaymentController();
-                upiPaymentController.UPIDetails();
-                flag = false;
-                break;
-            case 2:
-                BankTransferPaymentController bankPaymentController = new BankTransferPaymentController();
-                bankPaymentController.bankDetails();
-                flag = false;
-                break;
-            case 3:
-                System.out.println("Exiting...");
-                flag = false;
-                break;
-            default:
-                System.out.println("Invalid input. Please enter a valid option.");
-                break;
+            // Handle the user's choice
+            switch (choice) {
+                case 1:
+                    // User selected UPI payment mode
+                    UPIPaymentController upiPaymentController = new UPIPaymentController();
+                    upiPaymentController.UPIDetails();
+                    flag = false; // Exit the loop after processing UPI payment
+                    break;
+                case 2:
+                    // User selected Bank Transfer payment mode
+                    BankTransferPaymentController bankPaymentController = new BankTransferPaymentController();
+                    bankPaymentController.bankDetails();
+                    flag = false; // Exit the loop after processing Bank Transfer payment
+                    break;
+                case 3:
+                    // User chose to exit
+                    System.out.println("Exiting...");
+                    flag = false; // Exit the loop
+                    break;
+                default:
+                    // Handle invalid input
+                    System.out.println("Invalid input. Please enter a valid option.");
+                    break;
+            }
         }
-        }
+        // Close the scanner resource
         scanner.close();
     }
 }
